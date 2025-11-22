@@ -35,7 +35,7 @@ const allowedOrigins = [
   process.env.URL_3
 ].filter(Boolean);
 
-export const corsOptions = {
+const corsOptions = {
   origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
