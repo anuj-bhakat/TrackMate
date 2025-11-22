@@ -29,9 +29,19 @@ import similarityRoutes from "./routes/similarityRoutes.js";
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: '*'
-}));
+const allowedOrigins = [
+  process.env.URL_1,
+  process.env.URL_2,
+  process.env.URL_3
+].filter(Boolean);
+
+export const corsOptions = {
+  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Mount all your entity routes:
