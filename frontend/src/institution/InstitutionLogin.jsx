@@ -76,6 +76,7 @@ const InstitutionLogin = () => {
       localStorage.setItem('institutionId', institution);
       localStorage.setItem('institutionNameId', user.institution_id);
       localStorage.setItem('institutionUsername', userid);
+      localStorage.removeItem('isGuest');
 
       // Redirect to institution dashboard
       navigate('/institution');

@@ -78,6 +78,7 @@ const StudentLogin = () => {
       localStorage.setItem('StudentNameId', user.student_id);
       localStorage.setItem('studentUsername', user.username);
       localStorage.setItem('studentName', user.name);
+      localStorage.removeItem('isGuest');
 
       // Redirect to student dashboard
       navigate('/student');

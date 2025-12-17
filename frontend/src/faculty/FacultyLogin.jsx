@@ -78,6 +78,7 @@ const FacultyLogin = () => {
       localStorage.setItem('facultyNameId', user.faculty_id);
       localStorage.setItem('facultyUsername', user.username);
       localStorage.setItem('facultyName', user.name);
+      localStorage.removeItem('isGuest');
 
       // Redirect to faculty dashboard
       navigate('/faculty');
