@@ -7,6 +7,7 @@ const InstitutionGrades = () => {
   const [activeSection, setActiveSection] = useState(() => {
     return localStorage.getItem('manageGradesActiveSection') || 'semesters';
   });
+  const isGuest = localStorage.getItem('isGuest') === 'true';
   const [programs, setPrograms] = useState([]);
   const [semesters, setSemesters] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -235,6 +236,7 @@ const InstitutionGrades = () => {
 
   const handleAddSemester = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addSemesterFormData.programs_refer_id || !addSemesterFormData.semester_name || !addSemesterFormData.semester_sequence) {
       alert('Please fill in all fields');
       return;
@@ -267,6 +269,7 @@ const InstitutionGrades = () => {
 
   const handleEditSemester = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!selectedSemester || !editSemesterFormData.semester_name || !editSemesterFormData.semester_sequence) {
       alert('Please fill in all fields');
       return;
@@ -298,6 +301,7 @@ const InstitutionGrades = () => {
   };
 
   const handleDeleteSemester = async (semester) => {
+    if (isGuest) return;
     if (!confirm('Are you sure you want to delete this semester?')) return;
 
     setDeleteSemesterLoading(semester.id);
@@ -330,6 +334,7 @@ const InstitutionGrades = () => {
 
   const handleAddCourse = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addCourseFormData.semester_refer_id || !addCourseFormData.course_code || !addCourseFormData.course_name || !addCourseFormData.credits) {
       alert('Please fill in all required fields');
       return;
@@ -375,6 +380,7 @@ const InstitutionGrades = () => {
 
   const handleEditCourse = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!selectedCourse) return;
 
     setEditCourseLoading(true);
@@ -415,6 +421,7 @@ const InstitutionGrades = () => {
   };
 
   const handleDeleteCourse = async (course) => {
+    if (isGuest) return;
     if (!confirm('Are you sure you want to delete this course?')) return;
 
     setDeleteCourseLoading(course.id);
@@ -476,6 +483,7 @@ const InstitutionGrades = () => {
   };
 
   const handleDeleteMarks = async (student) => {
+    if (isGuest) return;
     if (!confirm('Are you sure you want to delete marks for this student?')) return;
 
     setDeleteMarksLoading(student.id);
@@ -503,6 +511,7 @@ const InstitutionGrades = () => {
 
   const handleAddMarks = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addMarksFormData.marks.length) {
       alert('Please add at least one mark');
       return;
@@ -547,6 +556,7 @@ const InstitutionGrades = () => {
 
   const handleEditMarks = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!selectedStudentForMarks) return;
 
     setEditMarksLoading(true);
@@ -638,11 +648,10 @@ const InstitutionGrades = () => {
                 setActiveSection('semesters');
                 localStorage.setItem('manageGradesActiveSection', 'semesters');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'semesters'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'semesters'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Semesters
             </button>
@@ -651,11 +660,10 @@ const InstitutionGrades = () => {
                 setActiveSection('courses');
                 localStorage.setItem('manageGradesActiveSection', 'courses');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'courses'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'courses'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Courses
             </button>
@@ -664,11 +672,10 @@ const InstitutionGrades = () => {
                 setActiveSection('students');
                 localStorage.setItem('manageGradesActiveSection', 'students');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'students'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'students'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Students
             </button>
@@ -677,11 +684,10 @@ const InstitutionGrades = () => {
                 setActiveSection('manage-grade');
                 localStorage.setItem('manageGradesActiveSection', 'manage-grade');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'manage-grade'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'manage-grade'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Manage Grade
             </button>
@@ -690,11 +696,10 @@ const InstitutionGrades = () => {
                 setActiveSection('program-grades');
                 localStorage.setItem('manageGradesActiveSection', 'program-grades');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'program-grades'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'program-grades'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Program Grades
             </button>
@@ -721,12 +726,9 @@ const InstitutionGrades = () => {
                     ))}
                   </select>
                   <button
-                    onClick={() => {
-                      setAddSemesterFormData({ ...addSemesterFormData, programs_refer_id: selectedProgramForSemesters });
-                      setShowAddSemesterModal(true);
-                    }}
-                    disabled={!selectedProgramForSemesters}
-                    className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => setShowAddSemesterModal(true)}
+                    disabled={isGuest || !selectedProgramForSemesters}
+                    className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest || !selectedProgramForSemesters ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                   >
                     Add Semester
                   </button>
@@ -772,16 +774,35 @@ const InstitutionGrades = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEditSemesterClick(semester)}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
+                            disabled={isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                           >
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteSemester(semester)}
-                            disabled={deleteSemesterLoading === semester.id}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={deleteSemesterLoading === semester.id || isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteSemesterLoading === semester.id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                           >
-                            {deleteSemesterLoading === semester.id ? 'Deleting...' : 'Delete'}
+                            {deleteSemesterLoading === semester.id ? (
+                              <>
+                                <svg className="animate-spin -ml-1 mr-2 h-3 w-3" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Deleting...
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Delete
+                              </>
+                            )}
                           </button>
                         </div>
                       </td>
@@ -845,8 +866,8 @@ const InstitutionGrades = () => {
                   </select>
                   <button
                     onClick={() => setShowAddCourseModal(true)}
-                    disabled={!selectedProgramForCourses}
-                    className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isGuest || !selectedProgramForCourses}
+                    className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest || !selectedProgramForCourses ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                   >
                     Add Course
                   </button>
@@ -920,16 +941,35 @@ const InstitutionGrades = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEditCourseClick(course)}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
+                            disabled={isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                           >
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteCourse(course)}
-                            disabled={deleteCourseLoading === course.id}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={deleteCourseLoading === course.id || isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteCourseLoading === course.id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                           >
-                            {deleteCourseLoading === course.id ? 'Deleting...' : 'Delete'}
+                            {deleteCourseLoading === course.id ? (
+                              <>
+                                <svg className="animate-spin -ml-1 mr-2 h-3 w-3" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Deleting...
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Delete
+                              </>
+                            )}
                           </button>
                         </div>
                       </td>
@@ -1068,23 +1108,46 @@ const InstitutionGrades = () => {
                             <>
                               <button
                                 onClick={() => handleEditMarksClick(student)}
-                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
+                                disabled={isGuest}
+                                className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                               >
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
                                 Edit
                               </button>
                               <button
                                 onClick={() => handleDeleteMarks(student)}
-                                disabled={deleteMarksLoading === student.id}
-                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={deleteMarksLoading === student.id || isGuest}
+                                className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteMarksLoading === student.id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                               >
-                                {deleteMarksLoading === student.id ? 'Deleting...' : 'Delete'}
+                                {deleteMarksLoading === student.id ? (
+                                  <>
+                                    <svg className="animate-spin -ml-1 mr-2 h-3 w-3" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Deleting...
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Delete
+                                  </>
+                                )}
                               </button>
                             </>
                           ) : (
                             <button
                               onClick={() => handleAddMarksClick(student)}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200"
+                              disabled={isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-200'}`}
                             >
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                              </svg>
                               Add Marks
                             </button>
                           )}
@@ -1145,7 +1208,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.semester_refer_id}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, semester_refer_id: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, semester_refer_id: e.target.value })}
                     >
                       <option value="">Select Semester</option>
                       {programSemestersForCourses.map((semester) => (
@@ -1162,7 +1225,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.course_code}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, course_code: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, course_code: e.target.value })}
                       placeholder="e.g., CS101"
                     />
                   </div>
@@ -1173,7 +1236,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.course_name}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, course_name: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, course_name: e.target.value })}
                       placeholder="e.g., Introduction to Programming"
                     />
                   </div>
@@ -1184,7 +1247,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.credits}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, credits: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, credits: e.target.value })}
                       placeholder="e.g., 3"
                     />
                   </div>
@@ -1272,7 +1335,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={editCourseFormData.course_name}
-                      onChange={(e) => setEditCourseFormData({...editCourseFormData, course_name: e.target.value})}
+                      onChange={(e) => setEditCourseFormData({ ...editCourseFormData, course_name: e.target.value })}
                       placeholder="e.g., Introduction to Programming"
                     />
                   </div>
@@ -1283,7 +1346,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={editCourseFormData.credits}
-                      onChange={(e) => setEditCourseFormData({...editCourseFormData, credits: e.target.value})}
+                      onChange={(e) => setEditCourseFormData({ ...editCourseFormData, credits: e.target.value })}
                       placeholder="e.g., 3"
                     />
                   </div>
@@ -1370,7 +1433,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.programs_refer_id}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, programs_refer_id: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, programs_refer_id: e.target.value })}
                     >
                       <option value="">Select Program</option>
                       {programs.map((program) => (
@@ -1387,7 +1450,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.semester_name}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, semester_name: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, semester_name: e.target.value })}
                       placeholder="e.g., Semester 1"
                     />
                   </div>
@@ -1399,7 +1462,7 @@ const InstitutionGrades = () => {
                       min="1"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.semester_sequence}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, semester_sequence: parseInt(e.target.value)})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, semester_sequence: parseInt(e.target.value) })}
                       placeholder="e.g., 1"
                     />
                   </div>
@@ -1449,7 +1512,7 @@ const InstitutionGrades = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={editSemesterFormData.semester_name}
-                      onChange={(e) => setEditSemesterFormData({...editSemesterFormData, semester_name: e.target.value})}
+                      onChange={(e) => setEditSemesterFormData({ ...editSemesterFormData, semester_name: e.target.value })}
                       placeholder="e.g., Semester 1"
                     />
                   </div>
@@ -1461,7 +1524,7 @@ const InstitutionGrades = () => {
                       min="1"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={editSemesterFormData.semester_sequence}
-                      onChange={(e) => setEditSemesterFormData({...editSemesterFormData, semester_sequence: parseInt(e.target.value)})}
+                      onChange={(e) => setEditSemesterFormData({ ...editSemesterFormData, semester_sequence: parseInt(e.target.value) })}
                       placeholder="e.g., 1"
                     />
                   </div>

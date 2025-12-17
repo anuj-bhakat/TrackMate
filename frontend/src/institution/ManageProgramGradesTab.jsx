@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const ManageProgramGradesTab = ({ programs }) => {
   const [selectedProgramForProgramGrades, setSelectedProgramForProgramGrades] = useState('');
+  const isGuest = localStorage.getItem('isGuest') === 'true';
   const [programStudents, setProgramStudents] = useState([]);
   const [programGrades, setProgramGrades] = useState([]);
   const [processingStatus, setProcessingStatus] = useState({}); // student_id: 'idle' | 'processing' | 'done' | 'error'
@@ -52,6 +53,7 @@ const ManageProgramGradesTab = ({ programs }) => {
   };
 
   const updateProgramGrades = async (studentId, programId) => {
+    if (isGuest) return;
     setProcessingStatus(prev => ({ ...prev, [studentId]: 'processing' }));
     try {
       const token = localStorage.getItem('institutionToken');
@@ -83,6 +85,7 @@ const ManageProgramGradesTab = ({ programs }) => {
   };
 
   const deleteProgramGrades = async (gradeId) => {
+    if (isGuest) return;
     if (!confirm('Are you sure you want to delete this program grade record?')) return;
     try {
       const token = localStorage.getItem('institutionToken');
@@ -101,6 +104,7 @@ const ManageProgramGradesTab = ({ programs }) => {
   };
 
   const updateAllProgramGrades = async () => {
+    if (isGuest) return;
     for (const student of programStudents) {
       await updateProgramGrades(student.id, selectedProgramForProgramGrades);
     }
@@ -127,7 +131,8 @@ const ManageProgramGradesTab = ({ programs }) => {
             {selectedProgramForProgramGrades && programStudents.length > 0 && (
               <button
                 onClick={updateAllProgramGrades}
-                className="px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm sm:text-base"
+                disabled={isGuest}
+                className={`px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}
               >
                 Update All Grades
               </button>
@@ -218,15 +223,16 @@ const ManageProgramGradesTab = ({ programs }) => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => updateProgramGrades(student.id, selectedProgramForProgramGrades)}
-                        disabled={processingStatus[student.id] === 'processing'}
-                        className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                        disabled={processingStatus[student.id] === 'processing' || isGuest}
+                        className={`px-3 py-1 text-xs bg-blue-600 text-white rounded disabled:opacity-50 ${isGuest ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-700'}`}
                       >
                         {grade ? 'Update' : 'Get'}
                       </button>
                       {grade && (
                         <button
                           onClick={() => deleteProgramGrades(grade.id)}
-                          className="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                          disabled={isGuest}
+                          className={`px-3 py-1 text-xs bg-red-600 text-white rounded ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                         >
                           Delete
                         </button>

@@ -18,18 +18,28 @@ export const signupStudent = async ({ institution_id, student_id, name, username
   return data;
 };
 
-export const loginStudent = async (institution_id, username, password) => {
+export const loginStudent = async (institution_id, username, password, isGuest = false) => {
+  let queryUsername = username;
+  let queryInstitutionId = institution_id;
+
+  if (isGuest) {
+    queryUsername = process.env.GUEST_USERNAME;
+    queryInstitutionId = process.env.GUEST_INSTITUTION_ID;
+  }
+
   const { data, error } = await supabase
     .from('students')
     .select('*')
-    .eq('username', username)
-    .eq('institution_id', institution_id)
+    .eq('username', queryUsername)
+    .eq('institution_id', queryInstitutionId)
     .single();
 
   if (error || !data) throw new Error('Invalid credentials');
 
-  const isValid = await bcrypt.compare(password, data.password);
-  if (!isValid) throw new Error('Invalid credentials');
+  if (!isGuest) {
+    const isValid = await bcrypt.compare(password, data.password);
+    if (!isValid) throw new Error('Invalid credentials');
+  }
 
   const token = jwt.sign(
     { id: data.id, username: data.username, student_id: data.student_id, institution_id: data.institution_id, role: 'student' },
@@ -38,15 +48,15 @@ export const loginStudent = async (institution_id, username, password) => {
   );
 
   return {
-  token,
-  user: {
-    id: data.id,
-    username: data.username,
-    name: data.name,
-    student_id: data.student_id,
-    institution_id: data.institution_id
-  }
-};
+    token,
+    user: {
+      id: data.id,
+      username: data.username,
+      name: data.name,
+      student_id: data.student_id,
+      institution_id: data.institution_id
+    }
+  };
 };
 
 

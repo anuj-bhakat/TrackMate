@@ -55,7 +55,10 @@ const InstitutionFaculties = () => {
     setShowModal(true);
   };
 
+  const isGuest = localStorage.getItem('isGuest') === 'true';
+
   const handleDeactivate = async (faculty) => {
+    if (isGuest) return;
     setDeleteLoading(faculty.faculty_id);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -78,6 +81,7 @@ const InstitutionFaculties = () => {
 
   const handleAddFaculty = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addFormData.firstName || !addFormData.lastName || !addFormData.username || !addFormData.facultyId || !addFormData.department || !addFormData.password || !addFormData.confirmPassword) {
       alert('Please fill in all fields');
       return;
@@ -86,6 +90,7 @@ const InstitutionFaculties = () => {
       alert('Passwords do not match');
       return;
     }
+    // ... existing code ...
 
     setAddLoading(true);
     try {
@@ -155,7 +160,8 @@ const InstitutionFaculties = () => {
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={() => setShowAddModal(true)}
-                className="px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm sm:text-base"
+                disabled={isGuest}
+                className={`px-3 sm:px-4 py-2 bg-green-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}
               >
                 Add Faculty
               </button>
@@ -223,11 +229,10 @@ const InstitutionFaculties = () => {
                       {faculty.department || 'Not specified'}
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        faculty.status === 'active'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${faculty.status === 'active'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                        }`}>
                         {faculty.status || 'Active'}
                       </span>
                     </td>
@@ -245,8 +250,8 @@ const InstitutionFaculties = () => {
                         </button>
                         <button
                           onClick={() => handleDeactivate(faculty)}
-                          disabled={deleteLoading === faculty.faculty_id}
-                          className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                          disabled={deleteLoading === faculty.faculty_id || isGuest}
+                          className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteLoading === faculty.faculty_id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                         >
                           {deleteLoading === faculty.faculty_id ? (
                             <>
@@ -313,11 +318,10 @@ const InstitutionFaculties = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Status</label>
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      selectedFaculty.status === 'active'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${selectedFaculty.status === 'active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                      }`}>
                       {selectedFaculty.status || 'Active'}
                     </span>
                   </div>
@@ -352,7 +356,7 @@ const InstitutionFaculties = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         value={addFormData.firstName}
-                        onChange={(e) => setAddFormData({...addFormData, firstName: e.target.value})}
+                        onChange={(e) => setAddFormData({ ...addFormData, firstName: e.target.value })}
                       />
                     </div>
                     <div>
@@ -362,7 +366,7 @@ const InstitutionFaculties = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         value={addFormData.lastName}
-                        onChange={(e) => setAddFormData({...addFormData, lastName: e.target.value})}
+                        onChange={(e) => setAddFormData({ ...addFormData, lastName: e.target.value })}
                       />
                     </div>
                   </div>
@@ -373,7 +377,7 @@ const InstitutionFaculties = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={addFormData.username}
-                      onChange={(e) => setAddFormData({...addFormData, username: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, username: e.target.value })}
                     />
                   </div>
                   <div>
@@ -383,7 +387,7 @@ const InstitutionFaculties = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={addFormData.facultyId}
-                      onChange={(e) => setAddFormData({...addFormData, facultyId: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, facultyId: e.target.value })}
                     />
                   </div>
                   <div>
@@ -392,7 +396,7 @@ const InstitutionFaculties = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={addFormData.department}
-                      onChange={(e) => setAddFormData({...addFormData, department: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, department: e.target.value })}
                     >
                       <option value="">Select Department</option>
                       <option value="Computer Science">Computer Science</option>
@@ -410,7 +414,7 @@ const InstitutionFaculties = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={addFormData.password}
-                      onChange={(e) => setAddFormData({...addFormData, password: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, password: e.target.value })}
                     />
                   </div>
                   <div>
@@ -420,7 +424,7 @@ const InstitutionFaculties = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={addFormData.confirmPassword}
-                      onChange={(e) => setAddFormData({...addFormData, confirmPassword: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, confirmPassword: e.target.value })}
                     />
                   </div>
                   <div className="flex justify-end space-x-3 pt-4">

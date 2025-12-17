@@ -11,8 +11,8 @@ export const signupStudent = async (req, res) => {
 
 export const loginStudent = async (req, res) => {
   try {
-    const { institution_id, username, password } = req.body;
-    const result = await studentService.loginStudent(institution_id, username, password);
+    const { institution_id, username, password, isGuest } = req.body;
+    const result = await studentService.loginStudent(institution_id, username, password, isGuest);
     res.json(result);
   } catch (err) {
     res.status(400).json({ error: err.message });

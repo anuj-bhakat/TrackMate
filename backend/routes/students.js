@@ -16,6 +16,6 @@ router.post('/login', loginStudent);
 router.put('/modify-password', modifyStudentPassword);
 // router.get('/institution/:institution_id', verifyStudentToken, getStudentsByInstitution);
 router.get('/institution/:institution_id', getStudentsByInstitution);
-router.delete('/:institution_id/:student_id', deleteStudent); 
+router.delete('/:institution_id/:student_id', deleteStudent);
 
 export default router;

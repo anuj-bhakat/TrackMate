@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Loader from '../components/Loader';
 
 const FacultyLogin = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const FacultyLogin = () => {
   const [error, setError] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingInstitutions, setLoadingInstitutions] = useState(true);
   const dropdownRef = useRef(null);
 
   const baseUrl = import.meta.env.VITE_API_URL;
@@ -31,11 +33,14 @@ const FacultyLogin = () => {
   useEffect(() => {
     const fetchInstitutions = async () => {
       try {
+        setLoadingInstitutions(true);
         const response = await axios.get(`${baseUrl}/api/available-institutions`);
         setInstitutions(response.data);
       } catch (error) {
         console.error('Error fetching institutions:', error);
         setError('Failed to load institutions');
+      } finally {
+        setLoadingInstitutions(false);
       }
     };
 
@@ -85,6 +90,34 @@ const FacultyLogin = () => {
     }
   };
 
+  const handleGuestLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(`${baseUrl}/api/faculties/login`, {
+        isGuest: true
+      });
+
+      const { token, user } = response.data;
+
+      localStorage.setItem('facultyToken', token);
+      localStorage.setItem('facultyId', user.id);
+      localStorage.setItem('institutionId', user.institution_id);
+      localStorage.setItem('facultyNameId', user.faculty_id);
+      localStorage.setItem('facultyUsername', user.username);
+      localStorage.setItem('facultyName', user.name);
+
+      navigate('/faculty');
+
+    } catch (error) {
+      console.error('Guest login error:', error);
+      setError('Guest login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -109,22 +142,31 @@ const FacultyLogin = () => {
               </label>
               <div
                 className="relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md bg-white hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 ease-in-out text-base cursor-pointer"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={() => !loadingInstitutions && setIsDropdownOpen(!isDropdownOpen)}
               >
                 <span className={institution ? 'text-gray-900' : 'text-gray-500'}>
-                  {institution ? institutions.find(inst => inst.institution_id === institution)?.institution_name || institution : 'Select Institution'}
+                  {loadingInstitutions ? (
+                    <div className="flex items-center gap-2">
+                      <Loader className="h-5 w-5" color="text-green-600" />
+                      <span>Loading institutions...</span>
+                    </div>
+                  ) : (
+                    institution ? institutions.find(inst => inst.institution_id === institution)?.institution_name || institution : 'Select Institution'
+                  )}
                 </span>
                 <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                  <svg
-                    className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'transform rotate-180' : ''}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
+                  {loadingInstitutions ? null : (
+                    <svg
+                      className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'transform rotate-180' : ''}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  )}
                 </div>
               </div>
-              {isDropdownOpen && (
+              {isDropdownOpen && !loadingInstitutions && (
                 <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
                   {institutions.map((inst, index) => (
                     <div
@@ -174,13 +216,21 @@ const FacultyLogin = () => {
             <div className="text-red-500 text-sm text-center">{error}</div>
           )}
 
-          <div>
+          <div className="space-y-4">
             <button
               type="submit"
               disabled={loading}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign in'}
+            </button>
+            <button
+              type="button"
+              onClick={handleGuestLogin}
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-green-600 text-base font-medium rounded-md text-green-600 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Sign in as Guest
             </button>
           </div>
         </form>

@@ -202,6 +202,8 @@ const InstitutionStudents = () => {
     return studentDetails.find(detail => detail.refer_id === studentId);
   };
 
+  const isGuest = localStorage.getItem('isGuest') === 'true';
+
   const handleViewDetails = (student) => {
     setSelectedStudent(student);
     setShowModal(true);
@@ -249,6 +251,7 @@ const InstitutionStudents = () => {
 
   const handleEditAssignmentSubmit = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!selectedStudentDetail) return;
 
     setEditAssignmentLoading(true);
@@ -285,7 +288,9 @@ const InstitutionStudents = () => {
 
 
 
+
   const handleDeleteStudent = async (student) => {
+    if (isGuest) return;
     setDeleteLoading(student.student_id);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -307,6 +312,7 @@ const InstitutionStudents = () => {
   };
 
   const handleDeleteAssignment = async (student) => {
+    if (isGuest) return;
     setDeleteLoading(student.student_id);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -328,6 +334,7 @@ const InstitutionStudents = () => {
 
   const handleAddStudent = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addFormData.firstName || !addFormData.lastName || !addFormData.username || !addFormData.studentId || !addFormData.password || !addFormData.confirmPassword) {
       alert('Please fill in all fields');
       return;
@@ -374,6 +381,7 @@ const InstitutionStudents = () => {
 
   const handleAssignStudentToProgram = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!selectedStudent) return;
 
     setAssignLoading(true);
@@ -507,11 +515,10 @@ const InstitutionStudents = () => {
                 setActiveSection('students');
                 localStorage.setItem('manageStudentsActiveSection', 'students');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'students'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'students'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Manage Students
             </button>
@@ -520,11 +527,10 @@ const InstitutionStudents = () => {
                 setActiveSection('assignments');
                 localStorage.setItem('manageStudentsActiveSection', 'assignments');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'assignments'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'assignments'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Assign Students
             </button>
@@ -533,11 +539,10 @@ const InstitutionStudents = () => {
                 setActiveSection('assignGroups');
                 localStorage.setItem('manageStudentsActiveSection', 'assignGroups');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'assignGroups'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'assignGroups'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Assign Groups
             </button>
@@ -560,7 +565,8 @@ const InstitutionStudents = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
+                  disabled={isGuest}
+                  className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                 >
                   Add Student
                 </button>
@@ -656,11 +662,10 @@ const InstitutionStudents = () => {
                         {student.student_id}
                       </td>
                       <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          student.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${student.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                          }`}>
                           {student.status || 'Active'}
                         </span>
                       </td>
@@ -678,8 +683,8 @@ const InstitutionStudents = () => {
                           </button>
                           <button
                             onClick={() => handleDeleteStudent(student)}
-                            disabled={deleteLoading === student.student_id}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                            disabled={deleteLoading === student.student_id || isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteLoading === student.student_id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                           >
                             {deleteLoading === student.student_id ? (
                               <>
@@ -698,10 +703,10 @@ const InstitutionStudents = () => {
                               </>
                             )}
                           </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -793,7 +798,8 @@ const InstitutionStudents = () => {
                               {assigned ? (
                                 <button
                                   onClick={() => handleEditStudentAssignment(assignment)}
-                                  className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200"
+                                  disabled={isGuest}
+                                  className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-purple-700 bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-200'}`}
                                 >
                                   <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -803,7 +809,8 @@ const InstitutionStudents = () => {
                               ) : (
                                 <button
                                   onClick={() => handleAssignStudent(student)}
-                                  className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                                  disabled={isGuest}
+                                  className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                                 >
                                   <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -813,8 +820,8 @@ const InstitutionStudents = () => {
                               )}
                               <button
                                 onClick={() => handleDeleteAssignment(student)}
-                                disabled={deleteLoading === student.student_id}
-                                className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                                disabled={deleteLoading === student.student_id || isGuest}
+                                className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteLoading === student.student_id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                               >
                                 {deleteLoading === student.student_id ? (
                                   <>
@@ -919,7 +926,8 @@ const InstitutionStudents = () => {
                           <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
                             <button
                               onClick={() => handleManageGroup(group)}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                              disabled={isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -936,12 +944,12 @@ const InstitutionStudents = () => {
                       group.courses?.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                       group.courses?.course_code?.toLowerCase().includes(searchTerm.toLowerCase())
                     ).length === 0 && (
-                      <tr>
-                        <td colSpan="4" className="px-6 py-12 text-center">
-                          <p className="text-gray-500">No groups found matching your criteria.</p>
-                        </td>
-                      </tr>
-                    )}
+                        <tr>
+                          <td colSpan="4" className="px-6 py-12 text-center">
+                            <p className="text-gray-500">No groups found matching your criteria.</p>
+                          </td>
+                        </tr>
+                      )}
                   </tbody>
                 </table>
               </div>
@@ -1311,7 +1319,7 @@ const InstitutionStudents = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         value={addFormData.firstName}
-                        onChange={(e) => setAddFormData({...addFormData, firstName: e.target.value})}
+                        onChange={(e) => setAddFormData({ ...addFormData, firstName: e.target.value })}
                       />
                     </div>
                     <div>
@@ -1321,7 +1329,7 @@ const InstitutionStudents = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                         value={addFormData.lastName}
-                        onChange={(e) => setAddFormData({...addFormData, lastName: e.target.value})}
+                        onChange={(e) => setAddFormData({ ...addFormData, lastName: e.target.value })}
                       />
                     </div>
                   </div>
@@ -1332,7 +1340,7 @@ const InstitutionStudents = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.username}
-                      onChange={(e) => setAddFormData({...addFormData, username: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, username: e.target.value })}
                     />
                   </div>
                   <div>
@@ -1342,7 +1350,7 @@ const InstitutionStudents = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.studentId}
-                      onChange={(e) => setAddFormData({...addFormData, studentId: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, studentId: e.target.value })}
                     />
                   </div>
                   <div>
@@ -1352,7 +1360,7 @@ const InstitutionStudents = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.password}
-                      onChange={(e) => setAddFormData({...addFormData, password: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, password: e.target.value })}
                     />
                   </div>
                   <div>
@@ -1362,7 +1370,7 @@ const InstitutionStudents = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.confirmPassword}
-                      onChange={(e) => setAddFormData({...addFormData, confirmPassword: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, confirmPassword: e.target.value })}
                     />
                   </div>
                   <div className="flex justify-end space-x-3 pt-4">

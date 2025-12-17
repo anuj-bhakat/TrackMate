@@ -34,6 +34,8 @@ const InstitutionPrograms = () => {
   const [activeSection, setActiveSection] = useState(() => {
     return localStorage.getItem('manageProgramsActiveSection') || 'programs';
   });
+
+  const isGuest = localStorage.getItem('isGuest') === 'true';
   const [addFormData, setAddFormData] = useState({
     programName: '',
     programCode: '',
@@ -252,6 +254,7 @@ const InstitutionPrograms = () => {
   };
 
   const handleDeactivate = async (program) => {
+    if (isGuest) return;
     setDeleteLoading(program.program_code);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -273,6 +276,7 @@ const InstitutionPrograms = () => {
   };
 
   const handleDeleteSemester = async (semester) => {
+    if (isGuest) return;
     setDeleteSemesterLoading(`${semester.program_code}-${semester.semester_code}`);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -294,6 +298,7 @@ const InstitutionPrograms = () => {
   };
 
   const handleDeleteCourse = async (course) => {
+    if (isGuest) return;
     setDeleteCourseLoading(course.id);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -315,6 +320,7 @@ const InstitutionPrograms = () => {
 
   const handleAddProgram = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addFormData.programName || !addFormData.programCode || !addFormData.department || !addFormData.duration) {
       alert('Please fill in all required fields');
       return;
@@ -354,6 +360,7 @@ const InstitutionPrograms = () => {
 
   const handleAddSemester = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addSemesterFormData.programCode || !addSemesterFormData.semester || !addSemesterFormData.semesterCode) {
       alert('Please fill in all required fields');
       return;
@@ -392,6 +399,7 @@ const InstitutionPrograms = () => {
 
   const handleEditProgram = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addFormData.programName || !addFormData.programCode) {
       alert('Please fill in required fields');
       return;
@@ -431,6 +439,7 @@ const InstitutionPrograms = () => {
 
   const handleEditSemester = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addSemesterFormData.semester || !addSemesterFormData.semesterCode) {
       alert('Please fill in required fields');
       return;
@@ -468,6 +477,7 @@ const InstitutionPrograms = () => {
 
   const handleAddCourse = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addCourseFormData.programCode || !addCourseFormData.semesterCode || !addCourseFormData.courseCode || !addCourseFormData.courseName) {
       alert('Please fill in all required fields');
       return;
@@ -508,6 +518,7 @@ const InstitutionPrograms = () => {
 
   const handleEditCourse = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addCourseFormData.courseName) {
       alert('Please fill in required fields');
       return;
@@ -567,6 +578,7 @@ const InstitutionPrograms = () => {
   };
 
   const handleAssignFaculty = async (facultyId) => {
+    if (isGuest) return;
     if (!selectedCourseForFaculty || !facultyId) return;
 
     try {
@@ -591,6 +603,7 @@ const InstitutionPrograms = () => {
 
   const handleAddGroup = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!addGroupFormData.programCode || !addGroupFormData.semesterCode || !addGroupFormData.courseReferId || !addGroupFormData.groupCode || !addGroupFormData.groupName) {
       alert('Please fill in all required fields');
       return;
@@ -631,6 +644,7 @@ const InstitutionPrograms = () => {
 
   const handleEditGroup = async (e) => {
     e.preventDefault();
+    if (isGuest) return;
     if (!selectedGroup || !editGroupFormData.groupName) {
       alert('Please fill in required fields');
       return;
@@ -664,6 +678,7 @@ const InstitutionPrograms = () => {
   };
 
   const handleDeleteGroup = async (group) => {
+    if (isGuest) return;
     setDeleteGroupLoading(group.id);
     try {
       const token = localStorage.getItem('institutionToken');
@@ -715,11 +730,10 @@ const InstitutionPrograms = () => {
                 setActiveSection('programs');
                 localStorage.setItem('manageProgramsActiveSection', 'programs');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'programs'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'programs'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Programs
             </button>
@@ -728,11 +742,10 @@ const InstitutionPrograms = () => {
                 setActiveSection('semesters');
                 localStorage.setItem('manageProgramsActiveSection', 'semesters');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'semesters'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'semesters'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Semesters
             </button>
@@ -741,11 +754,10 @@ const InstitutionPrograms = () => {
                 setActiveSection('courses');
                 localStorage.setItem('manageProgramsActiveSection', 'courses');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'courses'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'courses'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Courses
             </button>
@@ -754,11 +766,10 @@ const InstitutionPrograms = () => {
                 setActiveSection('groups');
                 localStorage.setItem('manageProgramsActiveSection', 'groups');
               }}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                activeSection === 'groups'
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${activeSection === 'groups'
+                ? 'bg-white text-orange-700 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               Groups
             </button>
@@ -781,7 +792,8 @@ const InstitutionPrograms = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
+                  disabled={isGuest}
+                  className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                 >
                   Add Program
                 </button>
@@ -815,7 +827,8 @@ const InstitutionPrograms = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => setShowAddSemesterModal(true)}
-                  className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
+                  disabled={isGuest}
+                  className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                 >
                   Add Semester
                 </button>
@@ -852,7 +865,8 @@ const InstitutionPrograms = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => setShowAddCourseModal(true)}
-                  className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
+                  disabled={isGuest}
+                  className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                 >
                   Add Course
                 </button>
@@ -915,7 +929,8 @@ const InstitutionPrograms = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => setShowAddGroupModal(true)}
-                  className="px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
+                  disabled={isGuest}
+                  className={`px-3 sm:px-4 py-2 bg-orange-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700'}`}
                 >
                   Add Group
                 </button>
@@ -989,7 +1004,8 @@ const InstitutionPrograms = () => {
                           </button>
                           <button
                             onClick={() => handleEditProgramClick(program)}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                            disabled={isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                           >
                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -998,8 +1014,8 @@ const InstitutionPrograms = () => {
                           </button>
                           <button
                             onClick={() => handleDeactivate(program)}
-                            disabled={deleteLoading === program.program_code}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                            disabled={deleteLoading === program.program_code || isGuest}
+                            className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteLoading === program.program_code || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                           >
                             {deleteLoading === program.program_code ? (
                               <>
@@ -1033,12 +1049,12 @@ const InstitutionPrograms = () => {
                       programs.find(p => p.program_code === semester.program_code)?.program_name?.toLowerCase().includes(searchTerm.toLowerCase())
                     )
                     .length === 0 && (
-                    <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center">
-                        <p className="text-gray-500">No semesters found matching your criteria.</p>
-                      </td>
-                    </tr>
-                  )}
+                      <tr>
+                        <td colSpan="4" className="px-6 py-12 text-center">
+                          <p className="text-gray-500">No semesters found matching your criteria.</p>
+                        </td>
+                      </tr>
+                    )}
                 </tbody>
               </table>
             </div>
@@ -1078,74 +1094,75 @@ const InstitutionPrograms = () => {
                       programs.find(p => p.program_code === semester.program_code)?.program_name?.toLowerCase().includes(searchTerm.toLowerCase())
                     )
                     .map((semester) => (
-                    <tr key={semester.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
-                            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className="text-blue-600 font-medium text-sm">
-                                {semester.semester?.charAt(0)?.toUpperCase() || 'S'}
-                              </span>
+                      <tr key={semester.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10">
+                              <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className="text-blue-600 font-medium text-sm">
+                                  {semester.semester?.charAt(0)?.toUpperCase() || 'S'}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">{semester.semester}</div>
                             </div>
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{semester.semester}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {semester.semester_code}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {programs.find(p => p.program_code === semester.program_code)?.program_name || semester.program_code}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
+                          <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                            <button
+                              onClick={() => handleViewSemesterDetails(semester)}
+                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
+                            >
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleEditSemesterClick(semester)}
+                              disabled={isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
+                            >
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteSemester(semester)}
+                              disabled={deleteSemesterLoading === `${semester.program_code}-${semester.semester_code}` || isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteSemesterLoading === `${semester.program_code}-${semester.semester_code}` || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
+                            >
+                              {deleteSemesterLoading === `${semester.program_code}-${semester.semester_code}` ? (
+                                <>
+                                  <svg className="animate-spin -ml-1 mr-2 h-3 w-3" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                  </svg>
+                                  Deleting...
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                  Delete
+                                </>
+                              )}
+                            </button>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {semester.semester_code}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {programs.find(p => p.program_code === semester.program_code)?.program_name || semester.program_code}
-                      </td>
-                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
-                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
-                          <button
-                            onClick={() => handleViewSemesterDetails(semester)}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
-                          >
-                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View
-                          </button>
-                          <button
-                            onClick={() => handleEditSemesterClick(semester)}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-                          >
-                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDeleteSemester(semester)}
-                            disabled={deleteSemesterLoading === `${semester.program_code}-${semester.semester_code}`}
-                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                          >
-                            {deleteSemesterLoading === `${semester.program_code}-${semester.semester_code}` ? (
-                              <>
-                                <svg className="animate-spin -ml-1 mr-2 h-3 w-3" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Deleting...
-                              </>
-                            ) : (
-                              <>
-                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                Delete
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -1224,7 +1241,8 @@ const InstitutionPrograms = () => {
                             </button>
                             <button
                               onClick={() => handleEditCourseClick(course)}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                              disabled={isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -1233,7 +1251,8 @@ const InstitutionPrograms = () => {
                             </button>
                             <button
                               onClick={() => handleAssignFacultyClick(course)}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200"
+                              disabled={isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-purple-700 bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-200'}`}
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -1242,8 +1261,8 @@ const InstitutionPrograms = () => {
                             </button>
                             <button
                               onClick={() => handleDeleteCourse(course)}
-                              disabled={deleteCourseLoading === course.id}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                              disabled={deleteCourseLoading === course.id || isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteCourseLoading === course.id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                             >
                               {deleteCourseLoading === course.id ? (
                                 <>
@@ -1272,10 +1291,10 @@ const InstitutionPrograms = () => {
                   course.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   course.course_code?.toLowerCase().includes(searchTerm.toLowerCase())
                 ).length === 0 && (
-                  <div className="py-12 px-4 sm:px-6 lg:px-8 text-center">
-                    <p className="text-gray-500">No courses found for the selected program and semester.</p>
-                  </div>
-                )}
+                    <div className="py-12 px-4 sm:px-6 lg:px-8 text-center">
+                      <p className="text-gray-500">No courses found for the selected program and semester.</p>
+                    </div>
+                  )}
               </div>
             ) : (
               <div className="py-12 px-4 sm:px-6 lg:px-8 text-center">
@@ -1352,7 +1371,8 @@ const InstitutionPrograms = () => {
                           <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
                             <button
                               onClick={() => handleEditGroupClick(group)}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                              disabled={isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-200'}`}
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -1361,8 +1381,8 @@ const InstitutionPrograms = () => {
                             </button>
                             <button
                               onClick={() => handleDeleteGroup(group)}
-                              disabled={deleteGroupLoading === group.id}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                              disabled={deleteGroupLoading === group.id || isGuest}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ${deleteGroupLoading === group.id || isGuest ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'}`}
                             >
                               {deleteGroupLoading === group.id ? (
                                 <>
@@ -1391,12 +1411,12 @@ const InstitutionPrograms = () => {
                       group.courses?.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                       group.courses?.course_code?.toLowerCase().includes(searchTerm.toLowerCase())
                     ).length === 0 && (
-                      <tr>
-                        <td colSpan="4" className="px-6 py-12 text-center">
-                          <p className="text-gray-500">No groups found matching your criteria.</p>
-                        </td>
-                      </tr>
-                    )}
+                        <tr>
+                          <td colSpan="4" className="px-6 py-12 text-center">
+                            <p className="text-gray-500">No groups found matching your criteria.</p>
+                          </td>
+                        </tr>
+                      )}
                   </tbody>
                 </table>
               </div>
@@ -1412,7 +1432,7 @@ const InstitutionPrograms = () => {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-medium text-gray-900">
                     {selectedProgram && selectedProgram.program_name ? 'Program Details' :
-                     selectedProgram && selectedProgram.course_name ? 'Course Details' : 'Semester Details'}
+                      selectedProgram && selectedProgram.course_name ? 'Course Details' : 'Semester Details'}
                   </h3>
                   <button
                     onClick={() => setShowModal(false)}
@@ -1534,7 +1554,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.programName}
-                      onChange={(e) => setAddFormData({...addFormData, programName: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, programName: e.target.value })}
                       placeholder="e.g., Bachelor of Computer Science"
                     />
                   </div>
@@ -1545,7 +1565,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.programCode}
-                      onChange={(e) => setAddFormData({...addFormData, programCode: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, programCode: e.target.value })}
                       placeholder="e.g., BCS-2024"
                     />
                   </div>
@@ -1555,7 +1575,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.department}
-                      onChange={(e) => setAddFormData({...addFormData, department: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, department: e.target.value })}
                     >
                       <option value="">Select Department</option>
                       <option value="Computer Science">Computer Science</option>
@@ -1573,7 +1593,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.duration}
-                      onChange={(e) => setAddFormData({...addFormData, duration: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, duration: e.target.value })}
                       placeholder="e.g., 4 years"
                     />
                   </div>
@@ -1583,7 +1603,7 @@ const InstitutionPrograms = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       rows="3"
                       value={addFormData.description}
-                      onChange={(e) => setAddFormData({...addFormData, description: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, description: e.target.value })}
                       placeholder="Program description (optional)"
                     />
                   </div>
@@ -1633,7 +1653,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.programName}
-                      onChange={(e) => setAddFormData({...addFormData, programName: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, programName: e.target.value })}
                       placeholder="e.g., Bachelor of Computer Science"
                     />
                   </div>
@@ -1644,7 +1664,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addFormData.programCode}
-                      onChange={(e) => setAddFormData({...addFormData, programCode: e.target.value})}
+                      onChange={(e) => setAddFormData({ ...addFormData, programCode: e.target.value })}
                       placeholder="e.g., BCS-2024"
                     />
                   </div>
@@ -1693,7 +1713,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.programCode}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, programCode: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, programCode: e.target.value })}
                     >
                       <option value="">Select Program</option>
                       {programs.map((program) => (
@@ -1710,7 +1730,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.semester}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, semester: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, semester: e.target.value })}
                       placeholder="e.g., Fall 2025"
                     />
                   </div>
@@ -1721,7 +1741,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.semesterCode}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, semesterCode: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, semesterCode: e.target.value })}
                       placeholder="e.g., F25"
                     />
                   </div>
@@ -1771,7 +1791,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.semester}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, semester: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, semester: e.target.value })}
                       placeholder="e.g., Fall 2025"
                     />
                   </div>
@@ -1782,7 +1802,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addSemesterFormData.semesterCode}
-                      onChange={(e) => setAddSemesterFormData({...addSemesterFormData, semesterCode: e.target.value})}
+                      onChange={(e) => setAddSemesterFormData({ ...addSemesterFormData, semesterCode: e.target.value })}
                       placeholder="e.g., F25"
                     />
                   </div>
@@ -1831,7 +1851,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.programCode}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, programCode: e.target.value, semesterCode: ''})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, programCode: e.target.value, semesterCode: '' })}
                     >
                       <option value="">Select Program</option>
                       {programs.map((program) => (
@@ -1847,7 +1867,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.semesterCode}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, semesterCode: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, semesterCode: e.target.value })}
                       disabled={!addCourseFormData.programCode}
                     >
                       <option value="">Select Semester</option>
@@ -1867,7 +1887,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.courseCode}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, courseCode: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, courseCode: e.target.value })}
                       placeholder="e.g., CS101A"
                     />
                   </div>
@@ -1878,7 +1898,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.courseName}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, courseName: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, courseName: e.target.value })}
                       placeholder="e.g., Data Structures"
                     />
                   </div>
@@ -1928,7 +1948,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addCourseFormData.courseName}
-                      onChange={(e) => setAddCourseFormData({...addCourseFormData, courseName: e.target.value})}
+                      onChange={(e) => setAddCourseFormData({ ...addCourseFormData, courseName: e.target.value })}
                       placeholder="e.g., Advanced Data Structures"
                     />
                   </div>
@@ -2079,7 +2099,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addGroupFormData.courseReferId}
-                      onChange={(e) => setAddGroupFormData({...addGroupFormData, courseReferId: e.target.value})}
+                      onChange={(e) => setAddGroupFormData({ ...addGroupFormData, courseReferId: e.target.value })}
                       disabled={!addGroupFormData.semesterCode || groupCoursesLoading}
                     >
                       <option value="">
@@ -2103,7 +2123,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addGroupFormData.groupCode}
-                      onChange={(e) => setAddGroupFormData({...addGroupFormData, groupCode: e.target.value})}
+                      onChange={(e) => setAddGroupFormData({ ...addGroupFormData, groupCode: e.target.value })}
                       placeholder="e.g., A01"
                     />
                   </div>
@@ -2114,7 +2134,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={addGroupFormData.groupName}
-                      onChange={(e) => setAddGroupFormData({...addGroupFormData, groupName: e.target.value})}
+                      onChange={(e) => setAddGroupFormData({ ...addGroupFormData, groupName: e.target.value })}
                       placeholder="e.g., Batch A"
                     />
                   </div>
@@ -2181,7 +2201,7 @@ const InstitutionPrograms = () => {
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={editGroupFormData.groupName}
-                      onChange={(e) => setEditGroupFormData({...editGroupFormData, groupName: e.target.value})}
+                      onChange={(e) => setEditGroupFormData({ ...editGroupFormData, groupName: e.target.value })}
                       placeholder="e.g., Updated Batch Name"
                     />
                   </div>
